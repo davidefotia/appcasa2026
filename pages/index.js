@@ -63,7 +63,7 @@ function Avatar({ name, size = 32 }) {
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', background: bg, color: '#fff',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: "'DM Serif Display', serif", fontSize: size * 0.42, fontWeight: 700, flexShrink: 0 }}>
+      fontFamily: "'Quicksand', sans-serif", fontSize: size * 0.42, fontWeight: 700, flexShrink: 0 }}>
       {letter}
     </div>
   );
@@ -73,7 +73,7 @@ function EmptyState({ icon, text }) {
   return (
     <div style={{ textAlign: 'center', padding: '40px 20px', color: '#B0A99A' }}>
       <div style={{ fontSize: 36, marginBottom: 10 }}>{icon}</div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>{text}</div>
+      <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 13 }}>{text}</div>
     </div>
   );
 }
@@ -82,7 +82,7 @@ function Badge({ label, color }) {
   return (
     <span style={{ background: color + '22', color, border: `1px solid ${color}55`,
       borderRadius: 20, padding: '1px 8px', fontSize: 10, fontWeight: 700,
-      fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+      fontFamily: "'Quicksand', sans-serif" }}>{label}</span>
   );
 }
 
@@ -154,9 +154,9 @@ function CalendarSection({ events, setEvents }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>📆</span>
             <div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 13, fontWeight: 700,
                 color: gcalStatus === 'error' ? '#C4614A' : '#1A5C34' }}>Google Calendar</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#555' }}>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#555' }}>
                 {gcalStatus === 'loading' && 'Sincronizzazione...'}
                 {gcalStatus === 'ok' && `✓ ${gcalEvents.length} eventi sincronizzati`}
                 {gcalStatus === 'error' && 'Errore — controlla la variabile GCAL_ICAL_URL'}
@@ -182,37 +182,34 @@ function CalendarSection({ events, setEvents }) {
       {/* Navigazione mese */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <button onClick={() => setViewDate(new Date(year, month - 1, 1))} style={S.navBtn}>‹</button>
-        <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 21, color: '#1A1A2E', margin: 0 }}>
+        <h2 style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 21, color: '#1A1A2E', margin: 0 }}>
           {MONTH_IT[month]} {year}
         </h2>
         <button onClick={() => setViewDate(new Date(year, month + 1, 1))} style={S.navBtn}>›</button>
       </div>
 
       {/* Griglia */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 2, marginBottom: 20 }}>
+      <div className="cal-grid" style={{ marginBottom: 20 }}>
         {DOW.map(d => (
-          <div key={d} style={{ textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
-            fontSize: 10, fontWeight: 700, color: '#B0A99A', padding: '3px 0' }}>{d}</div>
+          <div key={d} className="cal-label">{d}</div>
         ))}
-        {Array(firstDay).fill(null).map((_, i) => <div key={'p' + i}/>)}
+        {Array(firstDay).fill(null).map((_, i) => <div key={'p' + i} className="cal-cell" style={{ background: 'transparent', border: 'none' }}/>)}
         {Array(daysInMonth).fill(null).map((_, i) => {
           const day = i + 1;
           const dayEvs = getDay(day);
           const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
           return (
-            <div key={day} style={{ minHeight: 40, borderRadius: 6, padding: 2,
+            <div key={day} className="cal-cell" style={{
               background: isToday ? '#2C4A7C' : dayEvs.length ? '#FFF8F3' : '#FAFAF8',
               border: `1px solid ${isToday ? '#2C4A7C' : '#EDE8E1'}` }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600,
-                textAlign: 'right', color: isToday ? '#fff' : '#1A1A2E', marginBottom: 2 }}>{day}</div>
-              {dayEvs.slice(0, 2).map(ev => (
-                <div key={ev.id} style={{ background: (ev.isGcal ? '#34A853' : MEMBER_COLORS[ev.member] || '#888') + 'CC',
-                  borderRadius: 3, padding: '1px 3px', marginBottom: 1, fontSize: 8, color: '#fff',
-                  fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 10, fontWeight: 700,
+                textAlign: 'right', color: isToday ? '#fff' : '#1A1A2E', marginBottom: 1 }}>{day}</div>
+              {dayEvs.slice(0, 1).map(ev => (
+                <div key={ev.id} className="cal-event" style={{ background: (ev.isGcal ? '#34A853' : MEMBER_COLORS[ev.member] || '#888') + 'CC' }}>
                   {ev.title}
                 </div>
               ))}
-              {dayEvs.length > 2 && <div style={{ fontSize: 8, color: '#B0A99A' }}>+{dayEvs.length - 2}</div>}
+              {dayEvs.length > 1 && <div style={{ fontSize: 7, color: isToday ? '#ffffffaa' : '#B0A99A' }}>+{dayEvs.length - 1}</div>}
             </div>
           );
         })}
@@ -231,13 +228,13 @@ function CalendarSection({ events, setEvents }) {
             <Avatar name={ev.member} size={26}/>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13,
+                <span style={{ fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13,
                   color: '#1A1A2E', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {ev.title}
                 </span>
                 {ev.isGcal && <Badge label="Google" color="#34A853"/>}
               </div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#B0A99A' }}>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#B0A99A' }}>
                 {new Date(ev.date + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })}
                 {ev.note && ` · ${ev.note}`}
               </div>
@@ -327,8 +324,8 @@ function ShoppingSection({ items, setItems }) {
           <button onClick={() => toggle(item.id)} style={{ width: 22, height: 22, borderRadius: 6, flexShrink: 0,
             border: `2px solid ${MEMBER_COLORS[item.addedBy] || '#888'}`, background: 'transparent', cursor: 'pointer' }}/>
           <div style={{ flex: 1 }}>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1A2E' }}>{item.name}</span>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#B0A99A', marginLeft: 8 }}>{item.qty} {item.unit}</span>
+            <span style={{ fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 14, color: '#1A1A2E' }}>{item.name}</span>
+            <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 12, color: '#B0A99A', marginLeft: 8 }}>{item.qty} {item.unit}</span>
           </div>
           <Avatar name={item.addedBy} size={24}/>
           <button onClick={() => remove(item.id)} style={S.delBtn}>✕</button>
@@ -337,13 +334,13 @@ function ShoppingSection({ items, setItems }) {
 
       {done.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#B0A99A', fontWeight: 700, marginBottom: 7 }}>NEL CARRELLO</div>
+          <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#B0A99A', fontWeight: 700, marginBottom: 7 }}>NEL CARRELLO</div>
           {done.map(item => (
             <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10,
               background: '#F5F3F0', borderRadius: 12, padding: '9px 13px', marginBottom: 5, opacity: 0.7 }}>
               <button onClick={() => toggle(item.id)} style={{ width: 22, height: 22, borderRadius: 6, flexShrink: 0,
                 background: MEMBER_COLORS[item.addedBy] || '#888', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 12 }}>✓</button>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#888', textDecoration: 'line-through', flex: 1 }}>
+              <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 13, color: '#888', textDecoration: 'line-through', flex: 1 }}>
                 {item.name} <span style={{ fontSize: 11 }}>{item.qty} {item.unit}</span>
               </span>
               <button onClick={() => remove(item.id)} style={S.delBtn}>✕</button>
@@ -405,11 +402,11 @@ function ExpenseSection({ expenses, setExpenses }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
         <div style={{ ...S.statBox, flexDirection: 'column', alignItems: 'flex-start' }}>
           <span style={S.statLabel}>Totale spese</span>
-          <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: '#1A1A2E' }}>€{total.toFixed(2)}</span>
+          <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 22, color: '#1A1A2E' }}>€{total.toFixed(2)}</span>
         </div>
         <div style={{ ...S.statBox, flexDirection: 'column', alignItems: 'flex-start' }}>
           <span style={S.statLabel}>Bilancio</span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700,
+          <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 12, fontWeight: 700,
             color: Math.abs(balance) < 0.01 ? '#4CAF50' : '#C4614A' }}>
             {Math.abs(balance) < 0.01 ? '✓ In pari' : balance > 0 ? `Fra deve €${balance.toFixed(2)}` : `Dav deve €${Math.abs(balance).toFixed(2)}`}
           </span>
@@ -421,10 +418,10 @@ function ExpenseSection({ expenses, setExpenses }) {
           <div key={m.name} style={{ flex: 1, background: '#fff', borderRadius: 12, padding: '12px 14px', border: '1px solid #EDE8E1' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
               <Avatar name={m.name} size={22}/>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 12, color: '#1A1A2E' }}>{m.name}</span>
+              <span style={{ fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 12, color: '#1A1A2E' }}>{m.name}</span>
             </div>
-            <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 19, color: MEMBER_COLORS[m.name] }}>€{m.total.toFixed(2)}</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#B0A99A' }}>{total > 0 ? Math.round(m.total / total * 100) : 0}%</div>
+            <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 19, color: MEMBER_COLORS[m.name] }}>€{m.total.toFixed(2)}</div>
+            <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 10, color: '#B0A99A' }}>{total > 0 ? Math.round(m.total / total * 100) : 0}%</div>
           </div>
         ))}
       </div>
@@ -437,8 +434,8 @@ function ExpenseSection({ expenses, setExpenses }) {
               <span style={{ fontSize: 15, width: 22 }}>{CAT_ICONS[x.cat]}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#1A1A2E' }}>{x.cat}</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#1A1A2E' }}>€{x.total.toFixed(2)}</span>
+                  <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 12, color: '#1A1A2E' }}>{x.cat}</span>
+                  <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 12, fontWeight: 600, color: '#1A1A2E' }}>€{x.total.toFixed(2)}</span>
                 </div>
                 <div style={{ height: 4, background: '#EDE8E1', borderRadius: 2, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${total > 0 ? x.total / total * 100 : 0}%`, background: '#C4614A', borderRadius: 2 }}/>
@@ -457,13 +454,13 @@ function ExpenseSection({ expenses, setExpenses }) {
             background: '#fff', borderRadius: 12, padding: '10px 13px', marginBottom: 7, border: '1px solid #EDE8E1' }}>
             <span style={{ fontSize: 18 }}>{CAT_ICONS[exp.category]}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1A2E' }}>{exp.desc}</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#B0A99A' }}>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1A2E' }}>{exp.desc}</div>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#B0A99A' }}>
                 {new Date(exp.date + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })} · {exp.category}
               </div>
             </div>
             <Avatar name={exp.paidBy} size={22}/>
-            <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 15, color: '#1A1A2E', minWidth: 55, textAlign: 'right' }}>€{exp.amount.toFixed(2)}</div>
+            <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 15, color: '#1A1A2E', minWidth: 55, textAlign: 'right' }}>€{exp.amount.toFixed(2)}</div>
             <button onClick={() => remove(exp.id)} style={S.delBtn}>✕</button>
           </div>
         ))
@@ -527,10 +524,10 @@ function TaskSection({ tasks, setTasks }) {
             border: '1px solid #EDE8E1', display: 'flex', alignItems: 'center', gap: 10 }}>
             <Avatar name={m} size={30}/>
             <div>
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 20, color: MEMBER_COLORS[m] }}>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 20, color: MEMBER_COLORS[m] }}>
                 {pending.filter(t => t.assignedTo === m).length}
               </div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#B0A99A' }}>task aperti</div>
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 10, color: '#B0A99A' }}>task aperti</div>
             </div>
           </div>
         ))}
@@ -545,12 +542,12 @@ function TaskSection({ tasks, setTasks }) {
             <button onClick={() => toggle(task.id)} style={{ width: 22, height: 22, borderRadius: 6, marginTop: 1,
               flexShrink: 0, border: `2px solid ${PRIO[task.priority]}`, background: 'transparent', cursor: 'pointer' }}/>
             <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1A2E' }}>{task.title}</div>
-              {task.note && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#888', marginTop: 2 }}>{task.note}</div>}
+              <div style={{ fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13, color: '#1A1A2E' }}>{task.title}</div>
+              {task.note && <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#888', marginTop: 2 }}>{task.note}</div>}
               <div style={{ display: 'flex', gap: 6, marginTop: 5, alignItems: 'center', flexWrap: 'wrap' }}>
                 <Badge label={task.priority.toUpperCase()} color={PRIO[task.priority]}/>
                 {task.dueDate && (
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#B0A99A' }}>
+                  <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 10, color: '#B0A99A' }}>
                     📅 {new Date(task.dueDate + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
                   </span>
                 )}
@@ -570,7 +567,7 @@ function TaskSection({ tasks, setTasks }) {
               background: '#F5F3F0', borderRadius: 12, padding: '9px 13px', marginBottom: 5, opacity: 0.7 }}>
               <div style={{ width: 22, height: 22, borderRadius: 6, background: '#4CAF50', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12 }}>✓</div>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#888', textDecoration: 'line-through', flex: 1 }}>{task.title}</span>
+              <span style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 13, color: '#888', textDecoration: 'line-through', flex: 1 }}>{task.title}</span>
               <Avatar name={task.assignedTo} size={22}/>
               <button onClick={() => remove(task.id)} style={S.delBtn}>✕</button>
             </div>
@@ -630,7 +627,7 @@ export default function Home() {
 
   if (!ready) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F7F4EF' }}>
-      <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: '#2C4A7C' }}>Casa Mia 🏠</div>
+      <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 26, color: '#2C4A7C' }}>Casa Mia 🏠</div>
     </div>
   );
 
@@ -646,6 +643,10 @@ export default function Home() {
           *, *::before, *::after { box-sizing: border-box; }
           html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; }
           button { font-family: inherit; }
+          .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; width: 100%; }
+          .cal-cell { min-width: 0; overflow: hidden; min-height: 40px; border-radius: 6px; padding: 2px; }
+          .cal-label { font-size: 9px; font-weight: 700; color: #B0A99A; text-align: center; padding: 3px 0; min-width: 0; }
+          .cal-event { border-radius: 3px; padding: 1px 2px; margin-bottom: 1px; font-size: 7px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         `}</style>
         <meta name="mobile-web-app-capable" content="yes"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -653,7 +654,7 @@ export default function Home() {
         <meta name="apple-mobile-web-app-title" content="Casa Mia"/>
         <link rel="manifest" href="/manifest.json"/>
         <link rel="apple-touch-icon" href="/icon-192.png"/>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
       </Head>
 
       <div style={{ minHeight: '100vh', background: '#F7F4EF', paddingBottom: 88 }}>
@@ -663,8 +664,8 @@ export default function Home() {
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
-                <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: '#fff' }}>Casa Mia 🏠</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#ffffff77', marginTop: 1 }}>
+                <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 22, color: '#fff' }}>Casa Mia 🏠</div>
+                <div style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 11, color: '#ffffff77', marginTop: 1 }}>
                   {new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
               </div>
@@ -678,7 +679,7 @@ export default function Home() {
                   border: 'none', cursor: 'pointer', borderRadius: 9,
                   background: tab === t.id ? '#fff' : 'transparent',
                   color: tab === t.id ? '#1A1A2E' : '#ffffff88',
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 10,
+                  fontFamily: "'Quicksand', sans-serif", fontSize: 10,
                   fontWeight: tab === t.id ? 700 : 500, transition: 'all 0.2s',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                   <span style={{ fontSize: 15 }}>{t.icon}</span>
@@ -693,7 +694,7 @@ export default function Home() {
         <div style={{ maxWidth: 560, margin: '0 auto', padding: '12px 8px' }}>
           <div style={{ background: '#fff', borderRadius: 18, padding: '14px 10px',
             border: '1px solid #EDE8E1', boxShadow: '0 2px 10px #00000009' }}>
-            <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 18, color: '#1A1A2E', margin: '0 0 16px 0' }}>
+            <h2 style={{ fontFamily: "'Quicksand', sans-serif", fontSize: 18, color: '#1A1A2E', margin: '0 0 16px 0' }}>
               {cur.icon} {cur.label}
             </h2>
             {tab === 'calendar' && <CalendarSection events={events} setEvents={setEvents}/>}
@@ -712,19 +713,19 @@ const S = {
   navBtn: { background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#2C4A7C', padding: '4px 10px', borderRadius: 8 },
   delBtn: { background: 'none', border: 'none', cursor: 'pointer', color: '#C4C0B8', fontSize: 13, padding: '2px 5px', flexShrink: 0 },
   addBtn: { width: '100%', padding: '13px', border: '2px dashed #C4614A44', background: '#C4614A08',
-    color: '#C4614A', borderRadius: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer', marginTop: 12 },
+    color: '#C4614A', borderRadius: 12, fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer', marginTop: 12 },
   primaryBtn: { flex: 1, padding: '11px', background: '#2C4A7C', color: '#fff', border: 'none',
-    borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer' },
+    borderRadius: 10, fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer' },
   secondaryBtn: { flex: 1, padding: '11px', background: '#EDE8E1', color: '#666', border: 'none',
-    borderRadius: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer' },
+    borderRadius: 10, fontFamily: "'Quicksand', sans-serif", fontWeight: 600, fontSize: 13, cursor: 'pointer' },
   input: { width: '100%', padding: '10px 12px', border: '1px solid #EDE8E1', borderRadius: 10,
-    fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#1A1A2E', background: '#FAFAF8',
+    fontFamily: "'Quicksand', sans-serif", fontSize: 13, color: '#1A1A2E', background: '#FAFAF8',
     outline: 'none', marginBottom: 9, boxSizing: 'border-box' },
   formCard: { background: '#FAFAF8', border: '1px solid #EDE8E1', borderRadius: 14, padding: 18, marginTop: 14 },
-  formTitle: { fontFamily: "'DM Serif Display', serif", fontSize: 16, color: '#1A1A2E', margin: '0 0 12px 0' },
-  chip: { padding: '5px 13px', border: '1px solid #EDE8E1', borderRadius: 20, fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer' },
+  formTitle: { fontFamily: "'Quicksand', sans-serif", fontSize: 16, color: '#1A1A2E', margin: '0 0 12px 0' },
+  chip: { padding: '5px 13px', border: '1px solid #EDE8E1', borderRadius: 20, fontFamily: "'Quicksand', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer' },
   statBox: { flex: 1, background: '#fff', borderRadius: 12, padding: '11px 14px', border: '1px solid #EDE8E1', display: 'flex', flexDirection: 'column', gap: 2 },
-  statNum: { fontFamily: "'DM Serif Display', serif", fontSize: 26, color: '#1A1A2E' },
-  statLabel: { fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#B0A99A' },
-  secTitle: { fontFamily: "'DM Serif Display', serif", fontSize: 15, color: '#1A1A2E', margin: '0 0 10px 0' },
+  statNum: { fontFamily: "'Quicksand', sans-serif", fontSize: 26, color: '#1A1A2E' },
+  statLabel: { fontFamily: "'Quicksand', sans-serif", fontSize: 10, color: '#B0A99A' },
+  secTitle: { fontFamily: "'Quicksand', sans-serif", fontSize: 15, color: '#1A1A2E', margin: '0 0 10px 0' },
 };
