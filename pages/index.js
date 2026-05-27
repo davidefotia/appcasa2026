@@ -189,7 +189,7 @@ function CalendarSection({ events, setEvents }) {
       </div>
 
       {/* Griglia */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 3, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 2, marginBottom: 20 }}>
         {DOW.map(d => (
           <div key={d} style={{ textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
             fontSize: 10, fontWeight: 700, color: '#B0A99A', padding: '3px 0' }}>{d}</div>
@@ -200,7 +200,7 @@ function CalendarSection({ events, setEvents }) {
           const dayEvs = getDay(day);
           const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
           return (
-            <div key={day} style={{ minHeight: 48, borderRadius: 8, padding: 3,
+            <div key={day} style={{ minHeight: 40, borderRadius: 6, padding: 2,
               background: isToday ? '#2C4A7C' : dayEvs.length ? '#FFF8F3' : '#FAFAF8',
               border: `1px solid ${isToday ? '#2C4A7C' : '#EDE8E1'}` }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600,
@@ -642,6 +642,11 @@ export default function Home() {
         <title>Casa Mia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         <meta name="theme-color" content="#1A1A2E"/>
+        <style>{`
+          *, *::before, *::after { box-sizing: border-box; }
+          html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; }
+          button { font-family: inherit; }
+        `}</style>
         <meta name="mobile-web-app-capable" content="yes"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -654,7 +659,7 @@ export default function Home() {
       <div style={{ minHeight: '100vh', background: '#F7F4EF', paddingBottom: 88 }}>
         {/* Header sticky */}
         <div style={{ background: 'linear-gradient(135deg, #1A1A2E 0%, #2C4A7C 100%)',
-          padding: '20px 18px 0', position: 'sticky', top: 0, zIndex: 10 }}>
+          padding: '16px 10px 0', position: 'sticky', top: 0, zIndex: 10 }}>
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
@@ -685,8 +690,8 @@ export default function Home() {
         </div>
 
         {/* Contenuto */}
-        <div style={{ maxWidth: 560, margin: '0 auto', padding: '18px 14px' }}>
-          <div style={{ background: '#fff', borderRadius: 18, padding: '18px 14px',
+        <div style={{ maxWidth: 560, margin: '0 auto', padding: '12px 8px' }}>
+          <div style={{ background: '#fff', borderRadius: 18, padding: '14px 10px',
             border: '1px solid #EDE8E1', boxShadow: '0 2px 10px #00000009' }}>
             <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 18, color: '#1A1A2E', margin: '0 0 16px 0' }}>
               {cur.icon} {cur.label}
